@@ -43,6 +43,8 @@ require([
         });
 
         //создание игры
-        lvlGame.initialize();
+        lvlGame.initialize(function() {
+            $('#loading-info').remove();
+        });
     }
 );

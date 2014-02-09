@@ -90,8 +90,12 @@ define(
 
         // прототип инициализации. содержит внутриигровые объекты
         function Init() {
-            gameObj.layerBackground = new Kinetic.Layer();
-            gameObj.layerGame = new Kinetic.Layer();
+            gameObj.layerBackground = new Kinetic.Layer({
+                clearBeforeDraw: true
+            });
+            gameObj.layerGame = new Kinetic.Layer({
+                clearBeforeDraw: true
+            });
         }
         Init.prototype.background = function(image) {
             var backImage = new Kinetic.Image({
@@ -185,7 +189,7 @@ define(
             }
 
             // быстрая перерисовка сцены
-            game.stage.batchDraw();
+            timeElem.getLayer().batchDraw();
         }
 
         // таймер игры
@@ -219,19 +223,22 @@ define(
             });
 
             // запил внутрь спрайта прямоугольник
+            // TODO это плохая практика. Убрать отсюда
             cardSprite.rectBackground = new Kinetic.Rect({
                 x: x,
                 y: y,
                 width: cardSize.w + 2,
                 height:cardSize.h + 2,
                 fill: 'skyblue',
-                opacity: 1,
-//                kinetic bug: Можно использовать либо stroke, либо shadow
-//                stroke: 'black',
-//                strokeWidth: 1,
+//                есть глюк движка, когда внутри одного спрайта рисовать другой - начинает ползни тень
                 shadowColor: 'black',
                 shadowBlur: '12',
                 shadowOpacity:1,
+
+//                kinetic bug: Можно использовать либо stroke, либо shadow
+//                stroke: 'black',
+//                strokeWidth: 1,
+                opacity: 1,
                 listening: false
             });
 
@@ -242,7 +249,7 @@ define(
 
                 if(cardSprite.getAnimation() === 'idle') {
                     cardSprite.setAnimation(_this.type);
-                    cardSprite.rectBackground.setFill('white');
+//                    cardSprite.rectBackground.setFill('white');
 
                     // контейнеры для карт (используются как сохранение состояний уже выбранных карт)
                     gameObj.tempSprites.push(cardSprite);
@@ -251,7 +258,7 @@ define(
                     // если выбраны две карты
                     if(gameObj.tempTypes.length == 2) {
                         var isSame = gameObj.tempTypes.every(function(value) {
-                            return value === _this.type ? true : false;
+                            return value === _this.type;
                         });
 
                         // если две карты одинаковые
@@ -271,7 +278,7 @@ define(
                                 if(!value.showed) {
                                     setTimeout(function() {
                                         value.setAnimation('idle');
-                                        value.rectBackground.setFill('skyblue');
+//                                        value.rectBackground.setFill('skyblue');
                                     },500);
                                 }
                             });
@@ -282,8 +289,9 @@ define(
                         gameObj.tempTypes.length = 0;
                     }
 
-                    // перерисовка состояния уровня
-                    gameObj.layerGame.batchDraw();
+                    // перерисовка состояния всего уровня
+                    game.stage.clear()
+                    game.stage.draw();
                 }
             }
 
@@ -342,7 +350,7 @@ define(
         // обертка для вызова через require.js
         return {
             // функция инициализации игрового мира
-            initialize : function() {
+            initialize : function(callback) {
                 initGameObj();
 
                 // загрузка ресурсов
@@ -354,6 +362,8 @@ define(
 
                     // формирование заднего слоя
                     game.stage.add(gameObj.layerBackground);
+
+                    callback();
                 });
             },
             play: function() {
