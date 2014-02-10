@@ -195,7 +195,7 @@ define(
         // таймер игры
         function gameTimer() {
             var timerValue = --gameObj.timer;
-            updateGameTimerText('TIME:' + timerValue);
+            updateGameTimerText("TIME:\t\t" + timerValue + "'s");
 
             gameObj.gameTime = gameObj.startTimer - timerValue;
 
@@ -249,7 +249,7 @@ define(
 
                 if(cardSprite.getAnimation() === 'idle') {
                     cardSprite.setAnimation(_this.type);
-//                    cardSprite.rectBackground.setFill('white');
+                    cardSprite.rectBackground.setFill('white');
 
                     // контейнеры для карт (используются как сохранение состояний уже выбранных карт)
                     gameObj.tempSprites.push(cardSprite);
@@ -278,7 +278,7 @@ define(
                                 if(!value.showed) {
                                     setTimeout(function() {
                                         value.setAnimation('idle');
-//                                        value.rectBackground.setFill('skyblue');
+                                        value.rectBackground.setFill('skyblue');
                                     },500);
                                 }
                             });
@@ -299,6 +299,11 @@ define(
             cardSprite.on('mouseover', mouseOver);
             cardSprite.on('mouseout', mouseOut);
             cardSprite.on('click', cardClick);
+			
+			
+			//xxx TOUCH
+			cardSprite.on('touchend', cardClick);//or event touchstart
+			
 
             // формирование группы из карт
             gameObj.cardGroup.add(cardSprite);
@@ -358,7 +363,9 @@ define(
                 loadImages(sources, function(sources) {
                     game.init = new Init()
                         .background(sources.background)
-                        .text('Press Enter to start the game');
+                        .text("Press Enter or Click" +
+							  "\n to start the game"
+						);
 
                     // формирование заднего слоя
                     game.stage.add(gameObj.layerBackground);

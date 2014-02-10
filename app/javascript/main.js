@@ -30,19 +30,24 @@ require([
         ], function(game, controls, lvlGame, $) {
         "use strict";
 
-        //считывание собыий с клавиатуры или прочих устройств I/O
-        var anchor = window.document.getElementById('anchor');
-	       	anchor.focus();
-	    	anchor.addEventListener('keydown', controls.keyDown);
-
-        //создание canvas контейнера
+        var $anchor = $('#anchor'),
+			$container = $('#container');
+		
+		$anchor.focus();
+		
+		// привязка считывания собыий с клавиатуры или прочих устройств I/O
+		$anchor.on('keydown', controls.keyDown);
+		// привязка считывания клика и тапа 
+		$container.on('click touchstart', controls.click);
+			
+        // создание canvas контейнера
         game.stage = new Kinetic.Stage({
             container: 'container',
             width: 640,
             height: 360
         });
 
-        //создание игры
+        // создание игры
         lvlGame.initialize(function() {
             $('#loading-info').remove();
         });

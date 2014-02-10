@@ -10,8 +10,12 @@ body {
 }
 
 #container {
-    width: 720px;
+	position: absolute;
+	padding: 10px;
+	margin: 10px;
+    width: 640px;
     height: 360px;
+	box-shadow: 0px 0px 15px 0px rgba(0, 15, 60, 0.83);
 }
 
 #loading-info {
@@ -20,6 +24,6 @@ body {
     color: black;
     text-align: center;
     font-size: 72px;
-    margin: 144px auto;// (360/2)-(72/2)
+    margin: 144px auto;/* (360/2)-(72/2) */
     padding: 0;
 }

@@ -23,8 +23,10 @@ define(
 
                     default: break;
                 }
-            }
-
+            },
+			click : function(event) {
+				lvlGame.play();
+			}
         };
     }
 );
