@@ -274,10 +274,11 @@ define(
 						//ставим флаг что карты открыты
                         gameObj.tempCards.forEach(function(value){
 							value.showed = true;
+							value.setAttr('pushed', false);
                         });
 						
                         gameObj.cards.length -= 2;
-
+						
                         // если карт не осталось - уровень пройден
                         if(gameObj.cards.length === 0) {
 							gameWin();
