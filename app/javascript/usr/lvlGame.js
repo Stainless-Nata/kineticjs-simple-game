@@ -1,19 +1,18 @@
 /**
  * @name: Memory card
  * @author: Denis Baskovsky
- * @date: 12.02.2014
+ * @date: 29.03.2014
  */
-
 define(
     'lvlGame',
     ['game'],
     function(game) {
         "use strict";
 
-        game.init = null;// прототип инициализатора
-        var timer = null;// интервал таймера
-        var cardSize = { w: 110, h: 110 };
-        var gameObj = {};
+        game.init = null; // прототип инициализатора
+        var timer = null, // интервал таймера
+            cardSize = { w: 110, h: 110 },
+            gameObj = {};
 
         // загрузка игровых объектов
         function initGameObj() {
@@ -21,7 +20,7 @@ define(
             gameObj.layerGame = null;
             gameObj.startTimer = 30.0 ; // время для игры
         }
-
+        
         // перезагрузка игровых объектов
         function resetGameObj() {
             updateGameTimerText("Let's go!", 'white');
@@ -97,13 +96,17 @@ define(
             });
         }
         Init.prototype.background = function(image) {
-            var backImage = new Kinetic.Image({
-                image: image,
+              var backGradiend = new Kinetic.Rect({
+                x: 0,
+                y: 0,
                 width: game.stage.getWidth(),
-                height: game.stage.getHeight()
+                height: game.stage.getHeight(),
+                fillLinearGradientStartPoint: { x:0, y:0 },
+                fillLinearGradientEndPoint: { x: game.stage.getWidth(), y: game.stage.getHeight() },
+                fillLinearGradientColorStops: [0, 'white', 0.6, 'whitesmoke', 1, 'blue']
             });
-            gameObj.layerBackground.add(backImage);
-
+            gameObj.layerBackground.add(backGradiend);
+            
             return this;
         };
         Init.prototype.cards = function(img) {
@@ -111,12 +114,21 @@ define(
 
             var i = gameObj.cardAnimationsName.length,
                 j,
-                tempElem = [],
-                paddingLeft = 10,
-                paddingTop = 10,
+                cardXLength = 5,
+                cardYLength = 2,
                 left = 20,
                 top = 20,
-                tempAnimName = gameObj.cardAnimationsName;
+                tempElem = [],
+                paddingLeft = Number(
+                    ((game.stage.getWidth() / cardXLength - cardSize.w) + (left / cardXLength))
+                        .toFixed(1)),  
+                paddingTop = Number(
+                    ((game.stage.getHeight() / cardYLength - cardSize.h) + (top / cardYLength))
+                        .toFixed(1)),
+                tempAnimName = gameObj.cardAnimationsName,
+                cardZoom = Number(
+                    ((game.stage.getWidth()) / (640 + cardSize.w))
+                        .toFixed(1));
 
             while(i--) {
                 // выбор случайных карт
@@ -133,19 +145,20 @@ define(
             });
 
             // распологаем карты в два ряда по пять карт
-            for(i = 0; i < 2; i++) {
-                for(j = 0; j < 5; j++) {
+            for(i = 0; i < cardYLength; i++) {
+                for(j = 0; j < cardXLength; j++) {
                     // очистка первой временной карты
                     var cardType = tempElem.pop();
 
                     if(cardType) {
                         gameObj.cards.push(
-                            new card(
-                                cardType,
-                                img,
-                                left + j * (cardSize.w + paddingLeft),
-                                top + i * (cardSize.h + paddingTop)
-                            )
+                            new card({
+                                type :    cardType,
+                                img : img,
+                                left : (left + j * (cardSize.w + paddingLeft)),
+                                top : (top + i * (cardSize.h + paddingTop)),
+                                zoom : cardZoom
+                            })
                         );
                     }
                 }
@@ -181,6 +194,7 @@ define(
         function updateGameTimerText(text, color) {
 			// получение элемента по id элемента
             var timeElem = game.stage.get('#textTimer')[0];
+            
             if(text) {
                 timeElem.setText(text);
             }
@@ -194,6 +208,7 @@ define(
         // таймер игры
         function gameTimer() {
             var timerValue = --gameObj.timer;
+            
             updateGameTimerText("TIME:\t\t" + timerValue + "'s");
 
             gameObj.gameTime = gameObj.startTimer - timerValue;
@@ -205,43 +220,44 @@ define(
         }
 
         // название карты, картинка, координаты
-        var card = function(type, img, x, y) {
+        var card = function(obj) {
             var _this = this; //ссылка на текущий объект
-            this.type = type; //уникальный тип карты
+            this.type = obj.type; //уникальный тип карты
             this.show = false; //флаг что карта открыта
 
             // спрайт карты
             var cardSprite = new Kinetic.Sprite({
-                x: x || 0,
-                y: y || 0,
-                image: img,
+                x: obj.left || 0,
+                y: obj.top || 0,
+                image: obj.img,
                 animations: gameObj.cardAnimations,
                 animation: 'idle',
                 index: 0,
-                frameRate: 0
+                frameRate: 0,
+                scale : {
+                    x: obj.zoom,
+                    y: obj.zoom
+                },
             });
-
+            
             // запил внутрь спрайта прямоугольник
-            // TODO это плохая практика. Убрать отсюда
             cardSprite.rectBackground = new Kinetic.Rect({
-                x: x,
-                y: y,
+                x: cardSprite.attrs.x,
+                y: cardSprite.attrs.y,
                 width: cardSize.w + 2,
                 height:cardSize.h + 2,
+                scale : {
+                    x: cardSprite.attrs.scaleX,
+                    y: cardSprite.attrs.scaleY
+                },
                 fill: 'skyblue',
-//                есть глюк движка, когда внутри одного спрайта рисовать другой - начинает ползни тень
                 shadowColor: 'black',
                 shadowBlur: '12',
                 shadowOpacity:1,
-
-//                kinetic bug: Можно использовать либо stroke, либо shadow
-//                stroke: 'black',
-//                strokeWidth: 1,
                 opacity: 1,
                 listening: false
             });
 
-			
             // событие клика внутри по текущей карте
             function cardClick() {
                 // защита от дурака

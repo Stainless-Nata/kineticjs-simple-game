@@ -5,10 +5,6 @@
 define(
     'game',
     function( ) {
-    	"use strict";
-    	
-        var Game = window.Game || {};
-
-        return Game;
+        return window.Game || {};
     }
 );
