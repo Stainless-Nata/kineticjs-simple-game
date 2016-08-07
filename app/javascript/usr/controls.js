@@ -10,7 +10,6 @@ define(
         return {
             keyDown : function(event) {
                 var keyCode = event.keyCode;
-
                 switch (keyCode) {
                     //Enter, Space или P
                     case 13 :
@@ -24,9 +23,9 @@ define(
                     default: break;
                 }
             },
-						click : function(event) {
-							lvlGame.play();
-						}
+	    click : function(event) {
+		lvlGame.play();
+            }
         };
     }
 );
