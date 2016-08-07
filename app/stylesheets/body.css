@@ -7,13 +7,13 @@ body {
 }
 
 #container {
-	position: fixed;
-	padding: 10px;
-	margin: 10px;
+    position: fixed;
+    padding: 10px;
+    margin: 10px;
     width: calc(100% - 40px);
     height: calc(100% - 40px);
     overflow:hidden;
-	box-shadow: 0 0 15px 0 rgba(0, 15, 60, 0.83);
+    box-shadow: 0 0 15px 0 rgba(0, 15, 60, 0.83);
 }
 
 .kineticjs-content {
