@@ -2,21 +2,17 @@
  * @name configuration file
  * @author Denis Baskovsky
  */
-
 require.config({
     baseUrl: './app/javascript/usr',
     removeCombined : true,
     optimize : 'none',
-
     paths: {
-        //cdn or local
         jquery : [
-//                  '//cdnjs.cloudflare.com/ajax/libs/jquery/2.0.3/jquery.min',
-                  '../lib/jquery-2.0.3.min'
+//                 '//cdnjs.cloudflare.com/ajax/libs/jquery/2.0.3/jquery.min', // Включите если уверены в CDN
+                   '../lib/jquery-2.0.3.min'
                   ],
-        //only local
-        kinetic : '../lib/kinetic-v5.0.1.min',
-        domReady : '../lib/domReady'
+        kinetic :  '../lib/kinetic-v5.0.1.min',
+        domReady : '../lib/domReady.min'
     }
 });
 
@@ -28,7 +24,7 @@ require([
     ,'kinetic'
     ,'domReady'
         ], function(game, controls, lvlGame, $) {
-        "use strict";
+        'use strict';
 
         var $anchor = $('#anchor'),
 			$container = $('#container'),

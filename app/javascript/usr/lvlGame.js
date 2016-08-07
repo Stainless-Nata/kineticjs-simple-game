@@ -14,16 +14,16 @@ define(
             cardSize = { w: 110, h: 110 },
             gameObj = {};
 
-        // загрузка игровых объектов
+        // Загрузка игровых объектов
         function initGameObj() {
             gameObj.layerBackground = null;
             gameObj.layerGame = null;
-            gameObj.startTimer = 30.0 ; // время для игры
+            gameObj.startTimer = 30.0;// время для игры
         }
         
-        // перезагрузка игровых объектов
+        // Перезагрузка игровых объектов
         function resetGameObj() {
-            updateGameTimerText("Let's go!", 'white');
+            updateGameTimerText('Let\'s go!', 'white');
             gameObj.layerGame.removeChildren();
 
             gameObj.cardAnimationsName = ['type1', 'type2', 'type3', 'type4', 'type5'];
@@ -44,7 +44,7 @@ define(
             gameObj.gameTime = 0.0     	// время игры
         }
 
-        // события мыши
+        // Cобытия мыши
         function mouseOver() {
             // защита от дурака
             if(!gameObj.timer) return;
@@ -59,13 +59,13 @@ define(
            }
         }
 
-        // упаковочные ресурсы игры
+        // Упаковочные ресурсы игры
         var sources = {
             background: 'resource/backgrounds/background.png',
             card: 'resource/sprites/cards.png'
         };
 
-        // ассинхронная установка картинок из упаковочных ресурсов игры
+        // Ассинхронная загрузка ресурсов игры
         function loadImages(sources, callback) {
             var images = {},
                 loadedImages = 0,
@@ -86,7 +86,7 @@ define(
             }
         }
 
-        // прототип инициализации. содержит внутриигровые объекты
+        // Вводим функцию-прототип инициализации. Содержит внутриигровые объекты
         function Init() {
             gameObj.layerBackground = new Kinetic.Layer({
                 clearBeforeDraw: true
@@ -131,7 +131,7 @@ define(
                         .toFixed(1));
 
             while(i--) {
-                // выбор случайных карт
+                // случайных выбор карт
                 var randElem = tempAnimName.splice(Math.floor(Math.random() * (i + 1)), 1)[0];
 
                 // сразу вставляем по две карты
@@ -167,7 +167,7 @@ define(
             return this;
         };
         Init.prototype.text = function(text) {
-            // создание текстового элемента
+            // создание текстового элемента Kinetic
             var textTimer = new Kinetic.Text({
                 x: 0,
                 y: game.stage.getHeight() - 64, //специально для двух строк (30*2 и расстояние)
@@ -184,15 +184,15 @@ define(
                 id: 'textTimer'
             });
 
-            // установка текста на игровой слой
+            // Устанавливаем текст на игровой слой
             gameObj.layerBackground.add(textTimer);
 
             return this;
         };
 
-        // обновление текста таймера
+        // Обновление текста таймера
         function updateGameTimerText(text, color) {
-			// получение элемента по id элемента
+						// получение элемента по id элемента
             var timeElem = game.stage.get('#textTimer')[0];
             
             if(text) {
@@ -205,7 +205,7 @@ define(
             timeElem.getLayer().batchDraw();
         }
 
-        // таймер игры
+        // Таймер игры
         function gameTimer() {
             var timerValue = --gameObj.timer;
             
@@ -240,7 +240,7 @@ define(
                 },
             });
             
-            // запил внутрь спрайта прямоугольник
+            // В прямоугольник загружаем спрайт
             cardSprite.rectBackground = new Kinetic.Rect({
                 x: cardSprite.attrs.x,
                 y: cardSprite.attrs.y,
@@ -261,66 +261,64 @@ define(
             // событие клика внутри по текущей карте
             function cardClick() {
                 // защита от дурака
-                if(!gameObj.timer || 
-					cardSprite.getAnimation() !== 'idle') {
-					return;
-				}
+                if(!gameObj.timer || cardSprite.getAnimation() !== 'idle') {
+									return;
+								}
 				
-				// количество открытых карт на данный момент
-				var pushedCount = gameObj.cardGroup.children.filter(function(elem) {
-					return elem.getAttr('pushed')
-				}).length;
-			
-				// контейнеры для карт (используются как сохранение состояний уже выбранных карт)
-				if(pushedCount < 2) {
-					gameObj.tempCards.push(cardSprite);
-					gameObj.tempTypes.push(_this.type);
-					cardSprite.setAnimation(_this.type);
-					cardSprite.rectBackground.setFill('white');
-					
-					cardSprite.setAttr('pushed', true);
-				}
+								// количество открытых карт на данный момент
+								var pushedCount = gameObj.cardGroup.children.filter(function(elem) {
+									return elem.getAttr('pushed')
+								}).length;
+							
+								// контейнеры для карт (используются как сохранение состояний уже выбранных карт)
+								if(pushedCount < 2) {
+									gameObj.tempCards.push(cardSprite);
+									gameObj.tempTypes.push(_this.type);
+									cardSprite.setAnimation(_this.type);
+									cardSprite.rectBackground.setFill('white');	
+									cardSprite.setAttr('pushed', true);
+								}
+
                 // если выбраны две карты
                 if(gameObj.tempTypes.length === 2) {
                     var isSame = gameObj.tempTypes.every(function(value) {
-						return value === _this.type;
+											return value === _this.type;
                     });
                     // если две карты одинаковые
                     if(isSame) {
-						//ставим флаг что карты открыты
+												//ставим флаг что карты открыты
                         gameObj.tempCards.forEach(function(value){
-							value.showed = true;
-							value.setAttr('pushed', false);
+												value.showed = true;
+												value.setAttr('pushed', false);
                         });
 						
                         gameObj.cards.length -= 2;
 						
                         // если карт не осталось - уровень пройден
                         if(gameObj.cards.length === 0) {
-							gameWin();
-						}
+												gameWin();
+											}
                     } else {
                         // иначе поворачиваем открытые карты обратно
-						gameObj.tempCards
-							.filter(function(value) {
-								return !value.showed;
-							})
-							.forEach(function(value) {
-								var _value = value;
-						
-                                setTimeout(function() {
-                                    _value.setAnimation('idle');
-                                    _value.rectBackground.setFill('skyblue');
-									_value.setAttr('pushed', false);
-										
-									_value.getLayer().batchDraw();
-								}, 800);    
-							});
+											gameObj.tempCards
+												.filter(function(value) {
+													return !value.showed;
+												})
+												.forEach(function(value) {
+														var _value = value;
+											
+					                  setTimeout(function() {
+					                  	_value.setAnimation('idle');
+					                    _value.rectBackground.setFill('skyblue');
+															_value.setAttr('pushed', false);
+															_value.getLayer().batchDraw();
+														}, 800);    
+												});
                     }
 
                     // очистка контейнеров объектов карт и их типов
                     gameObj.tempCards.length = 0;
-					gameObj.tempTypes.length = 0;
+										gameObj.tempTypes.length = 0;
                 }
 
                 // перерисовка состояния всего уровня
@@ -375,7 +373,7 @@ define(
                 }).forEach(function(elem) {
                     elem.rectBackground.destroy();
                 });
-                // удаление карт
+                // удаление самих карт
                 gameObj.cardGroup.children.destroy();
             }
         }
@@ -392,8 +390,7 @@ define(
                     game.init = new Init()
                         .background(sources.background)
                         .text("Press Enter or Click" +
-							  "\n to start the game"
-						);
+							  							"\n to start the game");
 
                     // формирование заднего слоя
                     game.stage.add(gameObj.layerBackground);
@@ -403,9 +400,9 @@ define(
             },
             play: function() {
                 if(!gameObj.timer) {
-					//очистка данных
+										//очистка данных
                     resetGameObj();
-					clearInterval(timer);
+										clearInterval(timer);
 					
                     // загрузка ресурсов и последующая за ним функция инициализаций уровня
                     loadImages(sources, function(sources) {

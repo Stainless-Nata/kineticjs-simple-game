@@ -1,10 +1,9 @@
 /**
  @Game
  */
-
 define(
     'game',
-    function( ) {
+    function() {
         return window.Game || {};
     }
 );

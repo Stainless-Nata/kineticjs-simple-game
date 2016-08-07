@@ -4,7 +4,19 @@
     margin: 0;
     border: 0;
     position: relative;
-    color:#FFFFFF;
+    color: white;
     background-color: transparent;
-    letter-spacing: 0px;    
+    letter-spacing: 0;    
+    -webkit-user-select:none; 
+    -webkit-tap-highlight-color:rgba(255, 255, 255, 0);
+}
+
+input, 
+textarea  { 
+    -webkit-user-select:text; 
+}
+
+body { 
+    background-color: white; 
+    color:black 
 }

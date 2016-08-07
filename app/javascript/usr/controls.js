@@ -5,14 +5,14 @@ define(
     'controls',
     ['lvlGame'],
     function(lvlGame) {
-        "use strict";
+        'use strict';
 
         return {
             keyDown : function(event) {
                 var keyCode = event.keyCode;
 
                 switch (keyCode) {
-                    //enter, space or P-key
+                    //Enter, Space или P
                     case 13 :
                     case 32 :
                     case 80 : {
@@ -24,9 +24,9 @@ define(
                     default: break;
                 }
             },
-			click : function(event) {
-				lvlGame.play();
-			}
+						click : function(event) {
+							lvlGame.play();
+						}
         };
     }
 );

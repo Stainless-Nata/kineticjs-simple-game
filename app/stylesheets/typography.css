@@ -1,9 +1,10 @@
-/*
- * custom fonts
+/**
+ * Custom Fonts
  */
-@import url(http://fonts.googleapis.com/css?family=Prosto+One);
-
 @font-face {
     font-family: 'Prosto One';
     src: url(../fonts/Prosto_One.ttf);
 }
+
+/* Или загружайтся через CDN */
+/*@import url(http://fonts.googleapis.com/css?family=Prosto+One);*/
