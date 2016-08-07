@@ -27,22 +27,21 @@ require([
         'use strict';
 
         var $anchor = $('#anchor'),
-			$container = $('#container'),
+		 	$container = $('#container'),
             $window = $(window),
             $loading = $('#loading-info');
             
-		$anchor.focus();
+	    $anchor.focus();
 		
-		// привязка считывания собыий с клавиатуры или прочих устройств I/O
-		$anchor.on('keydown', controls.keyDown);
-		// привязка считывания клика и тапа 
+	    // привязка считывания собыий с клавиатуры или прочих устройств I/O
+	    $anchor.on('keydown', controls.keyDown);
+	    // привязка считывания клика и тапа 
 		$container.on('click touchstart', controls.click);
             
         $window.resize(function (e) {
             //smooth resize
             window.selfResize = window.selfResize || setTimeout(function() {
                 updateSize(e);
-                
                 clearTimeout(window.selfResize);
                 delete window.selfResize;
             }, 500);
@@ -52,7 +51,6 @@ require([
         // TODO добавить обновление stage 
         function updateSize(e) {
             var $content = $('.kineticjs-content');
-            
             $content.height(e.target.innerHeight);
             $content.width(e.target.innerWidth);
         }
