@@ -1,5 +1,5 @@
 /**
- * @name: Memory card
+ * @name: Memory card game
  * @author: Denis Baskovsky
  * @date: 29.03.2014
  */
@@ -7,9 +7,10 @@ define(
     'lvlGame',
     ['game'],
     function(game) {
-        "use strict";
+        'use strict';
 
         game.init = null; // прототип инициализатора
+        
         var timer = null, // интервал таймера
             cardSize = { w: 110, h: 110 },
             gameObj = {};
@@ -192,7 +193,7 @@ define(
 
         // Обновление текста таймера
         function updateGameTimerText(text, color) {
-						// получение элемента по id элемента
+	    // получение элемента по id элемента
             var timeElem = game.stage.get('#textTimer')[0];
             
             if(text) {
@@ -210,7 +211,7 @@ define(
             var timerValue = --gameObj.timer;
             
             updateGameTimerText("TIME:\t\t" + timerValue + "'s");
-
+            
             gameObj.gameTime = gameObj.startTimer - timerValue;
 
             // когда таймер завершается - гамовер
@@ -262,63 +263,63 @@ define(
             function cardClick() {
                 // защита от дурака
                 if(!gameObj.timer || cardSprite.getAnimation() !== 'idle') {
-									return;
-								}
+			return;
+		}
 				
-								// количество открытых карт на данный момент
-								var pushedCount = gameObj.cardGroup.children.filter(function(elem) {
-									return elem.getAttr('pushed')
-								}).length;
+		// количество открытых карт на данный момент
+		var pushedCount = gameObj.cardGroup.children.filter(function(elem) {
+			return elem.getAttr('pushed')
+		}).length;
 							
-								// контейнеры для карт (используются как сохранение состояний уже выбранных карт)
-								if(pushedCount < 2) {
-									gameObj.tempCards.push(cardSprite);
-									gameObj.tempTypes.push(_this.type);
-									cardSprite.setAnimation(_this.type);
-									cardSprite.rectBackground.setFill('white');	
-									cardSprite.setAttr('pushed', true);
-								}
+		// контейнеры для карт (используются как сохранение состояний уже выбранных карт)
+		if(pushedCount < 2) {
+			gameObj.tempCards.push(cardSprite);
+			gameObj.tempTypes.push(_this.type);
+			cardSprite.setAnimation(_this.type);
+			cardSprite.rectBackground.setFill('white');	
+			cardSprite.setAttr('pushed', true);
+		}
 
                 // если выбраны две карты
                 if(gameObj.tempTypes.length === 2) {
                     var isSame = gameObj.tempTypes.every(function(value) {
-											return value === _this.type;
+			return value === _this.type;
                     });
                     // если две карты одинаковые
                     if(isSame) {
-												//ставим флаг что карты открыты
+                    	//ставим флаг что карты открыты
                         gameObj.tempCards.forEach(function(value){
-												value.showed = true;
-												value.setAttr('pushed', false);
+				value.showed = true;
+				value.setAttr('pushed', false);
                         });
 						
                         gameObj.cards.length -= 2;
 						
                         // если карт не осталось - уровень пройден
                         if(gameObj.cards.length === 0) {
-												gameWin();
-											}
+				gameWin();
+			}
                     } else {
                         // иначе поворачиваем открытые карты обратно
-											gameObj.tempCards
-												.filter(function(value) {
-													return !value.showed;
-												})
-												.forEach(function(value) {
-														var _value = value;
+			gameObj.tempCards
+				.filter(function(value) {
+					return !value.showed;
+				})
+				.forEach(function(value) {
+					var _value = value;
 											
-					                  setTimeout(function() {
-					                  	_value.setAnimation('idle');
-					                    _value.rectBackground.setFill('skyblue');
-															_value.setAttr('pushed', false);
-															_value.getLayer().batchDraw();
-														}, 800);    
-												});
+					setTimeout(function() {
+						_value.setAnimation('idle');
+						_value.rectBackground.setFill('skyblue');
+						_value.setAttr('pushed', false);
+						_value.getLayer().batchDraw();
+					}, 800);    
+				});
                     }
 
                     // очистка контейнеров объектов карт и их типов
                     gameObj.tempCards.length = 0;
-										gameObj.tempTypes.length = 0;
+		    gameObj.tempTypes.length = 0;
                 }
 
                 // перерисовка состояния всего уровня
@@ -341,7 +342,7 @@ define(
             cardSprite.setZIndex(1);
         };
 
-        // проигрыш
+        // Проигрыш
         function gameOver() {
             clearInterval(timer);
 
@@ -353,7 +354,7 @@ define(
             removeCards();
         }
 
-        // выигрыш
+        // Выигрыш
         function gameWin() {
             clearInterval(timer);
 
@@ -364,7 +365,7 @@ define(
             );
         }
 
-        // удаление всех карт с уровня
+        // Удаление всех карт с уровня
         function removeCards() {
             if(gameObj.cardGroup.hasChildren()) {
                 // удаление масок карт
@@ -390,7 +391,7 @@ define(
                     game.init = new Init()
                         .background(sources.background)
                         .text("Press Enter or Click" +
-							  							"\n to start the game");
+				"\n to start the game");
 
                     // формирование заднего слоя
                     game.stage.add(gameObj.layerBackground);
@@ -400,9 +401,9 @@ define(
             },
             play: function() {
                 if(!gameObj.timer) {
-										//очистка данных
+		    //очистка данных
                     resetGameObj();
-										clearInterval(timer);
+		    clearInterval(timer);
 					
                     // загрузка ресурсов и последующая за ним функция инициализаций уровня
                     loadImages(sources, function(sources) {
